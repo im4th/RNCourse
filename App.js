@@ -27,7 +27,6 @@ export default function App() {
         </View>
     </View>);
 }
-// bro
 const styles = StyleSheet.create({
     appContainer: ({
         flex: 1, paddingTop: 50, paddingHorizontal: 16,
