@@ -27,7 +27,7 @@ export default function App() {
         </View>
     </View>);
 }
-
+// essa
 const styles = StyleSheet.create({
     appContainer: ({
         flex: 1, paddingTop: 50, paddingHorizontal: 16,
