@@ -1,28 +1,37 @@
 import {Button, FlatList, StyleSheet, Text, TextInput, View} from 'react-native';
 import {useState} from 'react';
+import GoalItem from './components/GoalItem';
+import GoalInput from './components/GoalInput';
 
 export default function App() {
-    const [enteredGoalText, setEnteredGoalText] = useState('')
+    const [modalVisible,setModalVisibility] = useState(false);
     const [courseGoals, setCourseGoals] = useState([]);
 
-    function goalInputHandler(enteredText) {
-        setEnteredGoalText(enteredText);
-    }
-
-    function addGoalHandler() {
+    function addGoalHandler(enteredGoalText) {
         setCourseGoals(currentCourseGoals => [...currentCourseGoals, {text: enteredGoalText, id: Math.random().toString()},]);
+        endAddGoalHandler();
+    };
+
+    function deleteGoalHandler(id){
+        setCourseGoals(currentCourseGoals =>{
+            return currentCourseGoals.filter((goal) => goal.id !== id);
+        });
+    };
+
+    function startAddGoalHandler(){
+        setModalVisibility(true);
+    };
+
+    function endAddGoalHandler(){
+        setModalVisibility(false);
     }
 
     return (<View style={styles.appContainer}>
-        <View style={styles.inputContainer}>
-            <TextInput style={styles.textInput} placeholder="Your course goal!" onChangeText={goalInputHandler}/>
-            <Button title="Add goal" onPress={addGoalHandler}/>
-        </View>
+    <Button title="Add New Goal" color={"#5e0acc"} onPress={startAddGoalHandler}></Button>
+        <GoalInput onCancel={endAddGoalHandler} visible = {modalVisible} onAddGoal = {addGoalHandler}/>
         <View style={styles.goalsContainer}>
             <FlatList data={courseGoals} renderItem={itemData => {
-                return (<View style={styles.goalItem}>
-                    <Text style={styles.goalText}>{itemData.item.text}</Text>
-                </View>)
+                return (<GoalItem text={itemData.item.text} id={itemData.item.id} onDeleteItem={deleteGoalHandler}/>)
             }} keyExtractor={(item,index) => {return item.id;}}/>
         </View>
     </View>);
@@ -30,21 +39,7 @@ export default function App() {
 const styles = StyleSheet.create({
     appContainer: ({
         flex: 1, paddingTop: 50, paddingHorizontal: 16,
-    }), inputContainer: {
-        flex: 1,
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        marginBottom: 24,
-        borderBottomWidth: 1,
-        borderColor: 'black',
-    }, textInput: {
-        borderWidth: 1, borderColor: '#cccccc', width: '70%', marginRight: 8, padding: 8
-    }, goalsContainer: {
+    }),goalsContainer: {
         flex: 5,
-    }, goalItem: {
-        margin: 8, borderRadius: 6, backgroundColor: "#5e0acc", padding: 8
-    }, goalText: {
-        color: "white"
     }
 });
